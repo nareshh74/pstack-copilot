@@ -350,6 +350,10 @@ one zero-dependency script guards the things that silently break a copilot skill
 
 there is no CI gate. this org disables hosted runners and the repo has no self-hosted ones, so a workflow here would fail on every PR without ever running the script. enforcement lives in the authoring path instead. the **create-skill** procedure and the **authoring-a-skill** playbook both name this command as a required step, which is the path an agent actually takes through this repo. run it yourself before you open a PR.
 
+## syncing upstream
+
+run the repo-local [`/sync-upstream`](./.github/skills/sync-upstream/SKILL.md) skill from this repo. it subtree-merges `pstack/` from `cursor/plugins` main, reapplies the port rules to upstream's changes, runs the checker and a review, and opens the PR. merge the PR with a merge commit, not a squash, so the next sync starts from the right upstream point.
+
 ## what changed from upstream
 
 | upstream (cursor plugin) | here |
