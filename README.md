@@ -2,7 +2,7 @@
 
 a port of [pstack](https://github.com/cursor/plugins/tree/main/pstack) by
 [poteto](https://x.com/poteto), rewritten to run on the github copilot
-app. 47 skills, 23 playbooks, 23 principles, and 3 agents. MIT, same as upstream.
+app. 47 skills, 23 playbooks, 23 principles, and 4 agents. MIT, same as upstream.
 
 this is not a mirror. the cursor plugin manifest, the `/add-plugin` install path,
 the event-triggered automations, and the graphite stacking layer are all gone.
@@ -29,8 +29,8 @@ git clone https://github.com/nareshh74/pstack-copilot ~/.copilot/pstack
 copilot skill add ~/.copilot/pstack/skills
 ```
 
-then copy the three agents so `poteto`, `poteto-worker`, and `comment-sicko`
-show up as spawnable subagents:
+then copy the four agents so `poteto`, `poteto-worker`, `comment-sicko`, and
+`naresh` show up as selectable agents:
 
 ```bash
 cp ~/.copilot/pstack/agents/*.agent.md ~/.copilot/agents/
