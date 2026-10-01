@@ -145,6 +145,23 @@ for (const entry of skillDirs) {
   checkManifest(manifest, entry.name);
 }
 
+// Repo-maintenance skills mention foreign tokens on purpose, so only manifests and links.
+const repoSkillsDir = join(root, '.github', 'skills');
+const repoSkillDirs = existsSync(repoSkillsDir)
+  ? readdirSync(repoSkillsDir, { withFileTypes: true }).filter((e) => e.isDirectory())
+  : [];
+for (const entry of repoSkillDirs) {
+  const manifest = join(repoSkillsDir, entry.name, 'SKILL.md');
+  if (!existsSync(manifest)) {
+    fail(join(repoSkillsDir, entry.name), 'frontmatter', 'directory has no SKILL.md');
+    continue;
+  }
+  checkManifest(manifest, entry.name);
+}
+for (const file of walk(repoSkillsDir)) {
+  if (file.endsWith('.md')) checkLinks(file);
+}
+
 for (const file of walk(join(root, 'agents'))) {
   if (!file.endsWith('.agent.md')) continue;
   checkManifest(file, basename(file).replace(/\.agent\.md$/, ''));
@@ -158,7 +175,9 @@ for (const file of markdown) {
 checkLinks(join(root, 'README.md'));
 
 if (violations.length === 0) {
-  console.log(`ok: ${skillDirs.length} skills, ${markdown.length} markdown files`);
+  console.log(
+    `ok: ${skillDirs.length} skills, ${repoSkillDirs.length} repo skills, ${markdown.length} markdown files`,
+  );
   process.exit(0);
 }
 
