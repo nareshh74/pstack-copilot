@@ -70,7 +70,7 @@ The port edited the shared skills inline. There are no Copilot-only copies to pr
     - Each `skills/*/SKILL.md` that the range added must be listed. Each one it deleted must be absent: `git -C $p diff --name-status $old $new -- 'skills/*/SKILL.md'`.
     - Each description that the range changed must show its new text in the list: `git -C $p diff -U0 $old $new -- 'skills/*/SKILL.md' | Select-String '^\+description:'`.
     - `copilot skill list` must report no load failures.
-    If no description changed, start a fresh session and invoke one skill whose body changed: `pstack -p "<question that only the new body answers>"`. The session that ran the sync loaded its skills at startup, so it can show stale skills. New sessions get the update.
+    If no description changed, start a fresh session and invoke one skill whose body changed: `& "$HOME\.copilot\bin\pstack.ps1" -p "<question that only the new body answers>"`. Use the full shim path, because agent shells skip the profile that puts `pstack` on PATH. The session that ran the sync loaded its skills at startup, so it can show stale skills. New sessions get the update.
 
 ## Decisions to surface, not make silently
 
