@@ -1,6 +1,6 @@
 ---
 name: sync-upstream
-description: Pull the latest pstack changes from cursor/plugins main into this Copilot port without breaking Copilot compatibility. Subtree-merges upstream's pstack/ folder, resolves conflicts by taking upstream's generic content and reapplying the Copilot CLI and Azure DevOps port rules, then verifies and opens a GitHub PR. Use for sync-upstream, "pull upstream", "sync with cursor", "update from cursor/plugins".
+description: Pull the latest pstack changes from cursor/plugins main into this Copilot port without breaking Copilot compatibility. Subtree-merges upstream's pstack/ folder, resolves conflicts by taking upstream's generic content and reapplying the Copilot CLI and Azure DevOps port rules, then verifies and opens a GitHub PR. After the merge, refreshes the local install at ~/.copilot/pstack and proves Copilot CLI loads the new skills. Use for sync-upstream, "pull upstream", "sync with cursor", "update from cursor/plugins".
 ---
 
 # Sync upstream
@@ -49,6 +49,23 @@ The port edited the shared skills inline. There are no Copilot-only copies to pr
    gh pr create --repo nareshh74/pstack-copilot --base main --title "<title>" --body-file <body.md>
    ```
    Fill the body from `.github/pull_request_template.md`. Merge with a merge commit, never squash or rebase, so the upstream parent survives.
+9. **Refresh the local install.** Do this only after the PR is merged. If it is still open, stop and tell the user to ask for the refresh after the merge. The install is a clone of `origin` at `~/.copilot/pstack`. Copilot CLI reads skills from its `skills/` folder, so `git pull` is the update.
+   ```
+   $p = "$HOME\.copilot\pstack"
+   git -C $p status --porcelain                  # must be empty, else stop and report
+   $old = git -C $p rev-parse HEAD
+   git -C $p pull --ff-only origin main
+   $new = git -C $p rev-parse HEAD
+   ```
+   Then:
+   - Confirm `skillDirectories` in `~/.copilot/settings.json` lists `$p\skills`. If not, run `copilot skill add "$p\skills"`.
+   - Diff each `$p\agents\*.agent.md` against `~/.copilot/agents\`. Copy the changed ones. If an installed agent has edits that the repo never had, report it before you overwrite it.
+   - Run `node "$p\scripts\install-always-on.mjs"`. It is idempotent.
+10. **Prove the CLI loads the new skills.** A file on disk is not proof. Compare `copilot skill list` against the range `$old..$new`:
+    - Each `skills/*/SKILL.md` that the range added must be listed. Each one it deleted must be absent: `git -C $p diff --name-status $old $new -- 'skills/*/SKILL.md'`.
+    - Each description that the range changed must show its new text in the list: `git -C $p diff -U0 $old $new -- 'skills/*/SKILL.md' | Select-String '^\+description:'`.
+    - `copilot skill list` must report no load failures.
+    If no description changed, start a fresh session and invoke one skill whose body changed: `pstack -p "<question that only the new body answers>"`. The session that ran the sync loaded its skills at startup, so it can show stale skills. New sessions get the update.
 
 ## Decisions to surface, not make silently
 
@@ -56,4 +73,4 @@ The port edited the shared skills inline. There are no Copilot-only copies to pr
 - Dropping a whole upstream skill or feature.
 - Any change to the trunk name inside skills. The playbooks target ADO repos whose trunk is `master`; this repo's own default branch is `main`.
 
-**Reply:** the upstream range synced (`<old>..<new>`), the conflicts resolved, the features ported or dropped, the checker and review results, and the PR link.
+**Reply:** the upstream range synced (`<old>..<new>`), the conflicts resolved, the features ported or dropped, the checker and review results, the PR link, and the install refresh (`$old..$new` and the skill-list evidence, or "pending merge").

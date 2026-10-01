@@ -352,7 +352,7 @@ there is no CI gate. this org disables hosted runners and the repo has no self-h
 
 ## syncing upstream
 
-run the repo-local [`/sync-upstream`](./.github/skills/sync-upstream/SKILL.md) skill from this repo. it subtree-merges `pstack/` from `cursor/plugins` main, reapplies the port rules to upstream's changes, runs the checker and a review, and opens the PR. merge the PR with a merge commit, not a squash, so the next sync starts from the right upstream point.
+run the repo-local [`/sync-upstream`](./.github/skills/sync-upstream/SKILL.md) skill from this repo. it subtree-merges `pstack/` from `cursor/plugins` main, reapplies the port rules to upstream's changes, runs the checker and a review, and opens the PR. after the merge, it pulls `~/.copilot/pstack`, refreshes the agents and always-on install, and checks `copilot skill list` for the new skills. merge the PR with a merge commit, not a squash, so the next sync starts from the right upstream point.
 
 ## what changed from upstream
 
