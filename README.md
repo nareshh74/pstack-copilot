@@ -364,7 +364,7 @@ run the repo-local [`/sync-upstream`](./.github/skills/sync-upstream/SKILL.md) s
 | `AGENTS.md` subagent contract | `.agent.md` files spawned through the `task` tool |
 | `AskQuestion` tool | the `ask_user` tool |
 | one model slug per role | `model` plus `reasoning_effort`, two fields |
-| `claude-fable-5` panel seat | `gemini-3.1-pro-preview` |
+| `claude-fable-5` panel seat | `claude-sonnet-5.5` |
 | graphite (`gt`) stacking | azure devops PR chains driven by `az repos` |
 | github PR review threads | ado threads via the ado mcp |
 | event-triggered automations | scheduled copilot workflows via `save_workflow` |
