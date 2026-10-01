@@ -36,7 +36,6 @@ judgment and prose:                     gemini-3.1-pro-preview / high
 hardest tasks:                          claude-opus-5 / xhigh
 how explorer:                           grok-4.5 / high
 how explainer:                          gemini-3.1-pro-preview / high
-how critics:                            gemini-3.1-pro-preview / high, gpt-5.6-sol / xhigh, grok-4.5 / high, claude-opus-5 / xhigh
 why investigators:                      grok-4.5 / high
 why synthesizer:                        gemini-3.1-pro-preview / high
 reflect tooling:                        gpt-5.6-sol / xhigh

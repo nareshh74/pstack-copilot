@@ -20,25 +20,23 @@ Open a todolist with one entry per phase before launching anything.
 
 1. State the done predicate and the artifact or report the swarm must return.
 2. Choose the shape. Partition into slices, race N workers on identical briefs, or mix both. For a race or mixed shape, declare `first pass`, `rank all`, or `best-of` before spawning.
-3. Set N from the user or derive it from the shape. N is total workers.
-4. Pick the worker model from `swarm workers` in `~/.copilot/pstack-models.md` when present. Otherwise use `grok-4.5 / high`. For a model race, name each arm's model up front.
-5. Give each worker its own writable output when it writes. Use a worktree, branch, or `/tmp/swarm-<slug>/worker-<n>/`.
+3. Set N from the user or derive it from the shape. N is total workers, not the cloud concurrency limit.
+4. Pick the worker model from the `swarm workers` line in `~/.copilot/pstack-models.md`. If the file or that line is missing, use `grok-4.5 / high`. For `auto` or `inherit-parent`, omit `model` and `reasoning_effort` so the workers run on the parent model. If the `task` tool rejects a model, use the default and say so. If it rejects the default, use the closest valid model of the same family from its error message. For a model race, name each arm's model up front.
+5. Give each worker its own writable output when it writes. Use a worktree, branch, or `/tmp/swarm-<slug>/worker-<n>/`. When workers verify or measure commits, each brief names the exact SHAs. A measurement brief also names the method (sample count, what one sample is, order). The worker records both in its result.
 
 ## Phase B: Fan out
 
-Spawn all N workers in one message with `agent_type: "general-purpose"`, `mode: "background"`, and the configured model. Copilot has no `environment` switch on the `task` tool; background subagents run on this machine and share its filesystem, which is what most swarms want.
-
-Escalate to real cloud workers only when the swarm is long-running or larger than this machine should carry, and the repo is GitHub-backed. Then use `create_session` with `execution_location: "cloud"` and a `kickoff.prompt` per worker instead of `task`, and set `base_branch` when a worker must start from a non-default pushed branch. Cloud sessions cannot read local state, so their briefs inline what they need or point at repo paths.
+Spawn all N workers in one message with `agent_type: "general-purpose"`, `mode: "background"`, and the step 4 model, left unset for `auto` or `inherit-parent`. Copilot has no `environment` switch on the `task` tool; background subagents run on this machine and share its filesystem, which is what most swarms want.
 
 After launching, do your own independent work rather than polling. You are notified as each worker finishes; collect with `read_agent`. A worker that needs a correction takes a `write_agent` follow-up rather than a fresh respawn.
 
-Every brief stands alone. Include the goal, scope, exact slice or race arm, how to verify, and what to report. Reports use `PASS`, `ISSUES`, or `BLOCKED` with evidence.
+Every brief stands alone. Include the goal, scope, exact slice or race arm, how to verify, and what to report. Reports use `PASS`, `ISSUES`, or `BLOCKED` with evidence. A worker that can prove a defect reports `ISSUES` and lists every issue it can prove, not only the first.
 
 If a worker drops out, proceed with N-1 and note it.
 
 ## Phase C: Aggregate
 
-Read the terminal results. For coverage, every required slice needs a result. For a race, apply the selection rule declared up front. Use first pass, rank all, or best-of. Do not paste raw worker dumps.
+Read the terminal results. Drop a result that does not record the SHAs and method its brief names, and rerun that worker once. After a second miss, record a gap. A gap does not count as a pass. For coverage, every required slice needs a result. For a race, apply the selection rule declared up front. Use first pass, rank all, or best-of. Do not paste raw worker dumps.
 
 Keep a compact result table, one-line evidenced issues, and explicit gaps or dropouts.
 

@@ -35,7 +35,7 @@ exposure layer. Invoke any entry with the `skill` tool by name.
 
 | Skill | Reach for it when |
 | --- | --- |
-| `how` | How does X work, code walkthrough before changing something, where should this live, which layer owns it. Can also critique architecture. |
+| `how` | How does X work, code walkthrough before changing something, where should this live, which layer owns it. |
 | `why` | Why does X work this way, why we picked Y, design rationale, regressions, postmortems, where a threshold number came from. Fans out across every available MCP evidence category. |
 | `teach` | Explain a body of work plainly to a person. Runs `how` and `why` and weaves both. |
 | `architect` | Code crossing a function boundary. Sketch types, signatures, and module structure before implementing. |

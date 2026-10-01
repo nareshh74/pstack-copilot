@@ -9,6 +9,7 @@ const DESCRIPTION_LIMIT = 1024;
 
 const UNSUPPORTED_FRONTMATTER = [
   'disable-model-invocation',
+  'paths',
   'mode',
   'icon',
   'color',

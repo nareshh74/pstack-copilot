@@ -1,11 +1,11 @@
 # Source playbooks
 
-The why skill spawns one investigator per available evidence category, each reading a single source-specific playbook below. The playbooks are concrete examples for common MCPs; adapt them for a different MCP in the same category.
+The why skill spawns one investigator per available evidence category, each reading a single source-specific playbook below. The playbooks are concrete examples for common MCPs. Adapt them for a different MCP in the same category.
 
 | Category | Playbook | Example MCP it documents |
 |---|---|---|
-| Source control history | [`code-archaeology.md`](./sources/code-archaeology.md) | git, `gh` |
-| Issue / ticket tracker | [`linear.md`](./sources/linear.md) | Linear (adapt for Jira, GitHub Issues, Plane, Shortcut) |
+| Source control history | [`code-archaeology.md`](./sources/code-archaeology.md) | git, Azure DevOps MCP |
+| Issue / ticket tracker | [`linear.md`](./sources/linear.md) | Linear (adapt for Azure Boards, Jira, Plane, Shortcut) |
 | Long-form documents | [`notion.md`](./sources/notion.md) | Notion (adapt for Confluence, Google Docs, Coda) |
 | Real-time team chat | [`slack.md`](./sources/slack.md) | Slack (adapt for Discord, Microsoft Teams, Mattermost) |
 | Infrastructure observability | [`datadog.md`](./sources/datadog.md) | Datadog (adapt for New Relic, Honeycomb, Grafana, Splunk) |

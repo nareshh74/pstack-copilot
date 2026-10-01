@@ -5,7 +5,7 @@ description: "Use for \"interrogate\", \"adversarial review\", \"multi-model rev
 
 # Interrogate
 
-Spawn one reviewer per configured model to adversarially review code changes. Each model gets the same prompt and rubric. The adversarial signal comes from model diversity, not assigned personas. Models differ in blind spots, priors, and reasoning patterns. Agreement across models is high-confidence signal; lone-model findings are worth reading but lower confidence.
+Spawn one reviewer per configured model to adversarially review code changes. Each model gets the same prompt and rubric. The adversarial signal comes from model diversity, not assigned personas.
 
 The deliverable is a synthesized verdict. Do NOT auto-apply changes.
 
@@ -21,18 +21,20 @@ Package the diff (or file contents) plus any surrounding context files the revie
 
 ## Step 2, State the Intent
 
-Before spawning reviewers, state the intent explicitly. What is this code trying to accomplish? Derive this from:
+Before spawning reviewers, state the intent explicitly. Derive this from:
 
 - The user's message
 - Commit messages
 - PR description if one exists
 - The code itself
 
-Write one clear paragraph. Reviewers challenge whether the work achieves the intent well, not whether the intent itself is correct. If you're unsure about the intent, ask the user before proceeding.
+Write one clear paragraph. If you're unsure about the intent, ask the user before proceeding.
 
 ## Step 3, Spawn Reviewers
 
-Launch all reviewers in a single message using the `task` tool. Use the `interrogate reviewers` list from `~/.copilot/pstack-models.md` when present, one reviewer per entry, extending or shrinking the Reviewer A/B/C/D labels below to the configured entry count; otherwise use the table defaults.
+Launch all reviewers in a single message using the `task` tool. Each reviewer below names a role line in `~/.copilot/pstack-models.md` and a default. Set `model` and `reasoning_effort` from that line's `model / effort` value, or from the default if the file or the line is missing. Omit both when the value is `auto` or `inherit-parent`. If the `task` tool rejects a model, use the default and say so. If it rejects the default, use the closest valid model of the same family from its error message.
+
+Use the `interrogate reviewers` list, one reviewer per entry, extending or shrinking the Reviewer A/B/C/D labels below to the configured entry count; otherwise use the table defaults.
 
 | Subagent | Default model |
 |----------|---------------|
@@ -46,8 +48,6 @@ For each reviewer:
 - `model`: the configured `interrogate reviewers` entry, or the table default with no configured line
 - read-only posture: the prompt forbids file writes; the parent applies every edit
 
-If a model ID is rejected as unresolvable when you try to spawn the subagent, check the valid IDs listed on the `task` tool's `model` parameter, pick the closest equivalent (prefer the highest supported `reasoning_effort` of the same family), spawn with the valid ID, and open a separate PR to update the configured value or default table. Do not block the review on the ID issue. If the configured value is `inherit-parent` or `auto`, omit `model` and `reasoning_effort` instead; never treat those aliases as broken IDs or enter this fallback for them.
-
 Read `references/reviewer-prompt.md` and fill in the template with:
 1. The stated intent
 2. The diff or file contents
@@ -55,8 +55,6 @@ Read `references/reviewer-prompt.md` and fill in the template with:
 4. The code-quality lens from `references/code-quality-review.md`
 
 The same filled template goes to all reviewers, so every model applies the code-quality lens.
-
-Each reviewer produces structured findings as described in the prompt template.
 
 ## Step 4, Synthesize
 
@@ -72,7 +70,7 @@ As results come back, build a unified picture:
 
 You are the lead reviewer, a pragmatic senior engineer, not a neutral aggregator.
 
-Read `references/lead-judgment.md` for the full framework. Reviewers only see a slice of the codebase. You have the full context (the goal, the constraints, the timeline, which tradeoffs were already considered). Use that context aggressively.
+Read `references/lead-judgment.md` for the full framework.
 
 Categorize every finding using these buckets:
 
@@ -106,7 +104,7 @@ Present the verdict in this structure:
 [Valid but low-priority. Brief list.]
 
 ### Dismissed
-[Rejected findings with brief rationale. This shows the user what was filtered out and why, so they can override your judgment if they disagree.]
+[Rejected findings with brief rationale.]
 
 ### Agreement Map
 [Where did models agree, where did they diverge, and what does the pattern of agreement/disagreement tell us?]
