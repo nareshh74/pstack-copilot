@@ -59,7 +59,12 @@ The port edited the shared skills inline. There are no Copilot-only copies to pr
    ```
    Then:
    - Confirm `skillDirectories` in `~/.copilot/settings.json` lists `$p\skills`. If not, run `copilot skill add "$p\skills"`.
-   - Diff each `$p\agents\*.agent.md` against `~/.copilot/agents\`. Copy the changed ones. If an installed agent has edits that the repo never had, report it before you overwrite it.
+   - For each `$p\agents\<name>.agent.md` that differs from `~/.copilot/agents\<name>.agent.md`, check whether the installed file is the old repo version. Compare blob hashes, because a literal compare fails on CRLF checkouts:
+     ```
+     git -C $p hash-object --path agents/<name>.agent.md "$HOME\.copilot\agents\<name>.agent.md"
+     git -C $p rev-parse "${old}:agents/<name>.agent.md"
+     ```
+     Equal hashes mean copy the new file over it. Different hashes mean the installed file has local edits. Skip it and report it.
    - Run `node "$p\scripts\install-always-on.mjs"`. It is idempotent.
 10. **Prove the CLI loads the new skills.** A file on disk is not proof. Compare `copilot skill list` against the range `$old..$new`:
     - Each `skills/*/SKILL.md` that the range added must be listed. Each one it deleted must be absent: `git -C $p diff --name-status $old $new -- 'skills/*/SKILL.md'`.
