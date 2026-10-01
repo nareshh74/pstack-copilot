@@ -37,7 +37,7 @@ The final file is upstream's new content and structure, with every Copilot and A
 | Cursor built-in `babysit` | `playbooks/babysit.md` |
 | Cursor built-in `create-skill` | the **create-skill** skill in this repo |
 | Graphite (`gt`, stacks, merge queue), `gh pr`, GitHub review threads and checks | Azure DevOps PR chains, `az repos`, the ADO MCP. Follow the existing port wording and `skills/poteto-mode/references/ado.md`. |
-| trunk `main`, `origin/main` in playbooks and scripts | `master`, `origin/master` |
+| trunk `main`, `origin/main` in playbooks and scripts | `master`, `origin/master` (the ADO trunk the playbooks target) |
 
 Frontmatter may hold only `name` and `description`. Strip every other key, for example `disable-model-invocation`, `paths`, `mode`, `icon`, `color`, `reminder`, `alwaysApply`, and `globs`. `name` must equal the directory name. Skill names in prose stay lowercase kebab-case.
 

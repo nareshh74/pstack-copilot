@@ -11,11 +11,11 @@ The port edited the shared skills inline. There are no Copilot-only copies to pr
 
 ## Steps
 
-1. **Preflight.** Require a clean tree on `master`. Add the remote once, then fetch:
+1. **Preflight.** Require a clean tree on `main`, this repo's default branch. Add the remote once, then fetch:
    ```
    git remote add cursor https://github.com/cursor/plugins.git   # skip if present
    git fetch cursor main
-   git log --oneline master..cursor/main -- pstack    # what is new
+   git log --oneline main..cursor/main -- pstack    # what is new
    ```
    Nothing listed means nothing to sync. Stop and say so.
 2. **Merge on a branch.**
@@ -46,7 +46,7 @@ The port edited the shared skills inline. There are no Copilot-only copies to pr
    ```
    git push -u origin HEAD
    $env:GH_HOST = 'github.com'
-   gh pr create --repo nareshh74/pstack-copilot --base master --fill-first --body-file <body.md>
+   gh pr create --repo nareshh74/pstack-copilot --base main --title "<title>" --body-file <body.md>
    ```
    Fill the body from `.github/pull_request_template.md`. Merge with a merge commit, never squash or rebase, so the upstream parent survives.
 
@@ -54,6 +54,6 @@ The port edited the shared skills inline. There are no Copilot-only copies to pr
 
 - Upstream model default changes. Keep `models.default.md` per-role defaults and the four-vendor panel. Report new upstream slugs that Copilot also offers, as a follow-up.
 - Dropping a whole upstream skill or feature.
-- Any change to the trunk name. This fork's playbooks use `master`.
+- Any change to the trunk name inside skills. The playbooks target ADO repos whose trunk is `master`; this repo's own default branch is `main`.
 
 **Reply:** the upstream range synced (`<old>..<new>`), the conflicts resolved, the features ported or dropped, the checker and review results, and the PR link.
