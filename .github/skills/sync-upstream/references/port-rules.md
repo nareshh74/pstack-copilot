@@ -46,13 +46,14 @@ Scripts ship inside the skill folder. Reference them relative to the skill (`scr
 ## Models
 
 A model choice here is two `task` tool fields, `model` and `reasoning_effort`, written `model / effort`. Upstream uses one Cursor slug. The per-role defaults and the four-seat panel in `models.default.md` are the source of truth. Keep four seats where upstream has three. When upstream adds a role, add it to `models.default.md` with a mapped default.
+These mappings favor OpenAI and Anthropic, but are not an allowlist. Use another available model when it fits the role better.
 
 | upstream slug | here |
 | --- | --- |
-| `claude-opus-*` | `claude-opus-5 / xhigh` |
-| `gpt-5.6-sol-*` | `gpt-5.6-sol / xhigh` |
-| `grok-*` | `grok-4.5 / high` |
-| `claude-fable-*`, any prose or judgment seat | `gemini-3.1-pro-preview / high` |
+| `claude-opus-*` | `claude-opus-5.5 / xhigh` |
+| `gpt-5.6-sol-*` | `gpt-6.1-sol / xhigh` |
+| `grok-*` | `gpt-5.6-sol-fast / high` |
+| `claude-fable-*`, any prose or judgment seat | `claude-sonnet-5.5 / high` |
 
 Update this table when `models.default.md` changes.
 
