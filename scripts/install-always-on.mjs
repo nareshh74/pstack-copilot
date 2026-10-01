@@ -72,12 +72,15 @@ function pathsEqual(a, b) {
   return normalizePath(a) === normalizePath(b);
 }
 
+// Copilot CLI writes `//` comment lines above the JSON in config.json; keep them as a header.
 function readJson(file) {
-  if (!existsSync(file)) return {};
-  const raw = readFileSync(file, 'utf8').trim();
-  if (!raw) return {};
+  if (!existsSync(file)) return { header: '', data: {} };
+  const text = readFileSync(file, 'utf8');
+  const header = /^(?:[ \t]*\/\/[^\n]*\n)*/.exec(text.replace(/\r\n/g, '\n'))[0];
+  const raw = text.replace(/\r\n/g, '\n').slice(header.length).trim();
+  if (!raw) return { header, data: {} };
   try {
-    return JSON.parse(raw);
+    return { header, data: JSON.parse(raw) };
   } catch {
     throw new Error(`invalid JSON in ${file}`);
   }
@@ -107,7 +110,7 @@ function installInstructions(removing, dryRun) {
 }
 
 function installTrustedFolder(removing, dryRun) {
-  const currentObj = readJson(configFile);
+  const { header, data: currentObj } = readJson(configFile);
   const currentText = existsSync(configFile) ? readFileSync(configFile, 'utf8') : '';
   const folders = Array.isArray(currentObj.trustedFolders) ? [...currentObj.trustedFolders] : [];
   const target = resolve(copilotDir);
@@ -124,7 +127,7 @@ function installTrustedFolder(removing, dryRun) {
   if (nextFolders.length > 0) nextObj.trustedFolders = nextFolders;
   else delete nextObj.trustedFolders;
 
-  const nextText = `${JSON.stringify(nextObj, null, 2)}\n`;
+  const nextText = `${header}${JSON.stringify(nextObj, null, 2)}\n`;
   if (!removing && has) {
     console.log(`no changes needed for trustedFolders (${target})`);
     return;

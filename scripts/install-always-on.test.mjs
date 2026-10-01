@@ -137,6 +137,19 @@ const cases = {
     assert.ok(copilotEntry, `expected ~/.copilot in ${JSON.stringify(cfg.trustedFolders)}`);
     h.cleanup();
   },
+  'config.json comment header from Copilot CLI is tolerated and kept'() {
+    const h = withHome();
+    mkdirSync(dirname(h.config), { recursive: true });
+    const header = '// User settings belong in settings.json.\r\n// This file is managed automatically.\r\n';
+    writeFileSync(h.config, `${header}{\r\n  "staff": true\r\n}\r\n`);
+    h.run();
+    const text = readFileSync(h.config, 'utf8');
+    assert.ok(text.startsWith('// User settings belong in settings.json.\n// This file'), text);
+    const cfg = JSON.parse(text.replace(/^(\/\/[^\n]*\n)*/, ''));
+    assert.strictEqual(cfg.staff, true);
+    assert.ok(cfg.trustedFolders.some((p) => normalizeEndsWithCopilot(p, h.home)));
+    h.cleanup();
+  },
   'trustedFolders uninstall removes only the copilot entry'() {
     const h = withHome();
     h.run();
