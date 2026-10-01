@@ -153,4 +153,3 @@ Each live lane runs in its own isolated worktree or cloud session at the PR head
 ````
 
 **Reply:** the plan path, the PR ids with their dependencies and the review-gated set, what the prototypes proved and what stays unproven, and the check script's output.
-
