@@ -17,3 +17,7 @@ Graphite, GitHub land steps, or playbook content from memory. CLI fix:
 Trivial lookups do not need it. Everything else does.
 
 To stand it down for a session, say `skip poteto mode`.
+
+# Session defaults
+
+Every session and every subagent (including background `poteto-worker` and other delegates): before the first response or action, invoke the `caveman` and `ponytail` skills at full level. Keep both active until the user says `normal mode` or changes a level. Use caveman for chat only; write commits, PR text, docs, code comments, and reports for other humans in normal prose.
